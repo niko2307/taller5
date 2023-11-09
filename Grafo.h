@@ -1,6 +1,7 @@
 #ifndef GRAFO_H
 #define GRAFO_H
 #include "Grafo.hxx"
+#include "Vertice.h"
 #include <vector>
 #include <list>
 #include <utility>
