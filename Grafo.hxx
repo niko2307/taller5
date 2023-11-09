@@ -1,8 +1,13 @@
 #include "Grafo.h"
-
+#include <vector>
+#include <list>
+#include <utility>
+#include <queue>
+#include <climits>
+#include <algorithm>
 template <class T, class U>
 Grafo<T, U>::Grafo() {
-    // Constructor
+
 }
 
 template <class T, class U>
@@ -121,3 +126,37 @@ bool Grafo<T, U>::eliminarArista(T ori, T des) {
     return res;
 }
 
+template <class T, class U>
+std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
+    int numVertices = vertices.size();
+    std::vector<U> distancia(numVertices, INT_MAX);
+    int indiceInicio = buscarVertice(inicio);
+
+    if (indiceInicio == -1) {
+        std::cerr << "El vértice de inicio no existe en el grafo.\n";
+        return distancia;
+    }
+
+    distancia[indiceInicio] = 0;
+
+    std::priority_queue<std::pair<U, int>, std::vector<std::pair<U, int>>, std::greater<std::pair<U, int>>> pq;
+    pq.push({0, indiceInicio});
+
+    while (!pq.empty()) {
+        int u = pq.top().second;
+        U distanciaU = pq.top().first;
+        pq.pop();
+
+        for (const std::pair<int, U>& vecino : aristas[u]) {
+            int v = vecino.first;
+            U pesoUV = vecino.second;
+
+            if (distanciaU + pesoUV < distancia[v]) {
+                distancia[v] = distanciaU + pesoUV;
+                pq.push({distancia[v], v});
+            }
+        }
+    }
+
+    return distancia;
+}

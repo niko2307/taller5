@@ -26,6 +26,7 @@ public:
     U buscarArista(T ori, T des);
     bool eliminarVertice(T vert);
     bool eliminarArista(T ori, T des);
+    std::vector<U> Grafo<T, U>::dijkstra(T inicio);
 };
 
 #endif // GRAFO_H
