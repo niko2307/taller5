@@ -1,3 +1,4 @@
+
 #ifndef VERTICE_H
 #define VERTICE_H
 

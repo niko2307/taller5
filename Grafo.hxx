@@ -47,7 +47,7 @@ U Grafo<T , U>::buscarArista(T ori, T des) {
     int i_ori = buscarVertice(ori);
     int i_des = buscarVertice(des);
     if (i_ori != -1 && i_des != -1) {
-        std::list<std::pair<int, U>>::iterator itList = aristas[i_ori].begin();
+       typename std::list<std::pair<int, U>>::iterator itList = aristas[i_ori].begin();
         for (; itList != aristas[i_ori].end(); itList++) {
             if (itList->first == i_des) res = itList->second;
         }
@@ -60,7 +60,7 @@ bool Grafo<T, U>::eliminarVertice(T vert) {
     bool res = false;
     int i_vert = buscarVertice(vert);
     if (i_vert != -1) {
-        std::vector<std::list<std::pair<int, U>>>::iterator posE = aristas.begin() + i_vert;
+       typename std::vector<std::list<std::pair<int, U>>>::iterator posE = aristas.begin() + i_vert;
         aristas.erase(posE);
         vertices.erase(vertices.begin() + i_vert);
         res = true;
@@ -68,26 +68,6 @@ bool Grafo<T, U>::eliminarVertice(T vert) {
     return res;
 }
 
-template <class T, class U>
-bool Grafo<T, U>::eliminarArista(T ori, T des) {
-    bool res = false;
-    int i_ori = buscarVertice(ori);
-    int i_des = buscarVertice(des);
-    if (i_ori != -1 && i_des != -1) {
-        std::list<std::pair<int, U>>::iterator posE;
-        for (auto itList = aristas[i_ori].begin(); itList != aristas[i_ori].end(); itList++) {
-            if (itList->first == i_des) {
-                posE = itList;
-                res = true;
-                break;
-            }
-        }
-        if (res) {
-            aristas[i_ori].erase(posE);
-        }
-    }
-    return res;
-}
 
 template <class T, class U>
 int Grafo<T, U>::cantVertices() {
@@ -105,7 +85,7 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
     std::vector<U> distancia(numVertices, INT_MAX);
     int indiceInicio = buscarVertice(inicio);
     if (indiceInicio == -1) {
-        std::cerr << "El vértice de inicio no existe en el grafo.\n";
+        std::cout << "El vértice de inicio no existe en el grafo.\n";
         return distancia;
     }
     distancia[indiceInicio] = 0;
@@ -137,9 +117,9 @@ T Grafo<T , U>::extraerCoordenada( std::string& coordenada) {
     return static_cast<T>(std::stoi(coordenada));
 }
 template <class T, class U>
-void Grafo<T , U>::agregarArista(int u, int v, int peso) {
-    aristas[u].emplace_back(v, peso);
-    aristas[v].emplace_back(u, peso); 
+void Grafo<T , U>::agregarArista(int u, int v) {
+    aristas[u].emplace_back(v);
+    aristas[v].emplace_back(u); 
 }
 
 template <class T, class U>
@@ -195,7 +175,7 @@ void Grafo<T , U>::cargarGrafoDesdeArchivo(std::ifstream& archivo) {
             archivo >> x >> y;
             insertarVertice(x);
             insertarVertice(y);
-            insertarArista(x, y);  
+            agregarArista(x, y);  
         }
     }
 }
