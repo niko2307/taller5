@@ -7,23 +7,24 @@
 #include <queue>
 #include <climits>
 #include <algorithm>
+
 template <class T, class U>
-Grafo<T, U>::Grafo() {
+Grafo<T , U>::Grafo() {
 
 }
 
 template <class T, class U>
-void Grafo<T, U>::setVertices(std::vector<T> v) {
+void Grafo<T , U>::setVertices( std::vector<T> v) {
     vertices = v;
 }
 
 template <class T, class U>
-void Grafo<T, U>::setAristas(std::vector<std::list<std::pair<int, U>>> a) {
+void Grafo<T , U>::setAristas(  std::vector<std::list<std::pair<int, U>>> a) {
     aristas = a;
 }
 
 template <class T, class U>
-std::vector<T> Grafo<T, U>::getVertices() {
+std::vector<T> Grafo<T , U>::getVertices() {
     return vertices;
 }
 
@@ -42,7 +43,7 @@ int Grafo<T, U>::buscarVertice(T vert) {
 }
 
 template <class T, class U>
-U Grafo<T, U>::buscarArista(T ori, T des) {
+U Grafo<T , U>::buscarArista(T ori, T des) {
     U res = -1;
     int i_ori = buscarVertice(ori);
     int i_des = buscarVertice(des);
@@ -60,22 +61,10 @@ bool Grafo<T, U>::eliminarVertice(T vert) {
     bool res = false;
     int i_vert = buscarVertice(vert);
     if (i_vert != -1) {
-        std::vector<std::list<std::pair<int, U>>>::iterator itA, posE;
-        int ind = 0;
-        for (itA = aristas.begin(); itA != aristas.end(); itA++, ind++) {
-            if (ind == i_vert) {
-                posE = itA;
-            } else {
-                std::list<std::pair<int, U>>::iterator itList, posEE;
-                for (itList = itA->begin(); itList != itA->end(); itList++) {
-                    if (itList->first == i_vert) {
-                        posEE = itList;
-                    }
-                }
-                itA->erase(posEE);
-            }
-        }
+        std::vector<std::list<std::pair<int, U>>>::iterator posE = aristas.begin() + i_vert;
         aristas.erase(posE);
+        vertices.erase(vertices.begin() + i_vert);
+        res = true;
     }
     return res;
 }
@@ -86,13 +75,29 @@ bool Grafo<T, U>::eliminarArista(T ori, T des) {
     int i_ori = buscarVertice(ori);
     int i_des = buscarVertice(des);
     if (i_ori != -1 && i_des != -1) {
-        std::list<std::pair<int, U>>::iterator itList, posE;
-        for (itList = aristas[i_ori].begin(); itList != aristas[i_ori].end(); itList++) {
-            if (itList->first == i_des) posE = itList;
+        std::list<std::pair<int, U>>::iterator posE;
+        for (auto itList = aristas[i_ori].begin(); itList != aristas[i_ori].end(); itList++) {
+            if (itList->first == i_des) {
+                posE = itList;
+                res = true;
+                break;
+            }
         }
-        aristas[i_ori].erase(posE);
+        if (res) {
+            aristas[i_ori].erase(posE);
+        }
     }
     return res;
+}
+
+template <class T, class U>
+int Grafo<T, U>::cantVertices() {
+    return vertices.size();
+}
+
+template <class T, class U>
+void Grafo<T, U>::insertarVertice(T vert) {
+    vertices.push_back(vert);
 }
 
 template <class T, class U>
@@ -108,7 +113,7 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
 
     
     distancia[indiceInicio] = 0;
-    std::priority_queue<std::pair<U, int>, std::vector<std::pair<U, int>>, std::greater<std::pair<U, int>>> pq;
+    std::priority_queue<std::pair<U , int>, std::vector<std::pair<U , int>>, std::greater<std::pair<U, int>>> pq;
     pq.push({0, indiceInicio});
 
     while (!pq.empty()) {
@@ -133,7 +138,7 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
 
 
 template <class T, class U>
-T Grafo<T, U>::extraerCoordenada( std::string& coordenada) {
+T Grafo<T , U>::extraerCoordenada( std::string& coordenada) {
     size_t pos = coordenada.find('|');
     if (pos != std::string::npos) {
         return static_cast<T>(std::stoi(coordenada.substr(pos + 1)));
@@ -143,7 +148,7 @@ T Grafo<T, U>::extraerCoordenada( std::string& coordenada) {
 
 
 template <class T, class U>
-void Grafo<T, U>::agregarArista(int u, int v, int peso) {
+void Grafo<T , U>::agregarArista(int u, int v, int peso) {
     aristas[u].emplace_back(v, peso);
     aristas[v].emplace_back(u, peso); // Considerando grafos no dirigidos
 }
@@ -158,8 +163,8 @@ void Grafo<T, U>::agregarAristaPesada(T ori, T des, U cos) {
 }
 
 template <class T, class U>
-std::vector<T> Grafo<T, U>::organizarAgujeros() {
-    std::vector<T> ordenAgujeros;
+std::vector<std::vector<int>> Grafo<T, U>::organizarAgujeros() {
+    std::vector<std::vector<int>> ordenAgujeros;
 
     for (int i = 0; i < cantVertices(); ++i) {
         std::vector<T> ordenCircuito;
@@ -192,8 +197,7 @@ std::vector<T> Grafo<T, U>::organizarAgujeros() {
 }
 
 template <class T, class U>
-
-void Grafo<T, U>::cargarGrafoDesdeArchivo(std::ifstream& archivo) {
+void Grafo<T , U>::cargarGrafoDesdeArchivo(std::ifstream& archivo) {
     int n, m;
     archivo >> n;
 

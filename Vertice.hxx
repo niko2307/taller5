@@ -1,19 +1,21 @@
 #include "Vertice.h"
 
 template <class T>
-Vertice<T>::Vertice() {}
+vertice<T>::vertice() {
+
+}
 
 template <class T>
-Vertice<T>::Vertice(T val) {
+vertice<T>::vertice(T val) {
     valor=val;
 }
 
 template <class T>
-T Vertice<T>::getValor() {
+T vertice<T>::getValor() {
     return valor;
 }
 
 template <class T>
-void Vertice<T>::setValor(T val) {
+void vertice<T>::setValor(T val) {
     valor = val;
 }
