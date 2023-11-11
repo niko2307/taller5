@@ -21,12 +21,16 @@ public:
     int cantVertices() { return vertices.size(); }
     int cantAristas();
     int buscarVertice(T vert);
-    bool insertarVertice(T vert);
-    bool insertarArista(T ori, T des, U cos);
     U buscarArista(T ori, T des);
     bool eliminarVertice(T vert);
     bool eliminarArista(T ori, T des);
     std::vector<U> Grafo<T, U>::dijkstra(T inicio);
+    T Grafo<T, U>::extraerCoordenada( std::string& coordenada);
+    void Grafo<T, U>::agregarArista(int u, int v, int peso);
+    void Grafo<T, U>::agregarAristaPesada(T ori, T des, U cos);
+    std::vector<T> Grafo<T, U>::organizarAgujeros();
+    void Grafo<T, U>::cargarGrafoDesdeArchivo(std::ifstream& archivo);
+
 };
 
 #endif // GRAFO_H

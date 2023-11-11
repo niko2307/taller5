@@ -1,6 +1,8 @@
 #include "Grafo.h"
+#include <fstream>
 #include <vector>
 #include <list>
+#include <string>
 #include <utility>
 #include <queue>
 #include <climits>
@@ -37,39 +39,6 @@ int Grafo<T, U>::buscarVertice(T vert) {
         if (vertices[i] == vert) ind = i;
     }
     return ind;
-}
-
-template <class T, class U>
-bool Grafo<T, U>::insertarVertice(T vert) {
-    bool res = false;
-    if (buscarVertice(vert) == -1) {
-        vertices.push_back(vert);
-        std::list<std::pair<int, U>> nlist;
-        aristas.push_back(nlist);
-    }
-    return res;
-}
-
-template <class T, class U>
-bool Grafo<T, U>::insertarArista(T ori, T des, U cos) {
-    bool res = false;
-    int i_ori = buscarVertice(ori);
-    int i_des = buscarVertice(des);
-    if (i_ori != -1 && i_des != -1) {
-        bool esta = false;
-        std::list<std::pair<int, U>>::iterator itList = aristas[i_ori].begin();
-        for (; itList != aristas[i_ori].end(); itList++) {
-            if (itList->first == i_des) esta = true;
-        }
-        if (!esta) {
-            std::pair<int, U> n_par;
-            n_par.first = i_des;
-            n_par.second = cos;
-            aristas[i_ori].push_back(n_par);
-            res = true;
-        }
-    }
-    return res;
 }
 
 template <class T, class U>
@@ -137,8 +106,8 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
         return distancia;
     }
 
+    
     distancia[indiceInicio] = 0;
-
     std::priority_queue<std::pair<U, int>, std::vector<std::pair<U, int>>, std::greater<std::pair<U, int>>> pq;
     pq.push({0, indiceInicio});
 
@@ -147,7 +116,7 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
         U distanciaU = pq.top().first;
         pq.pop();
 
-        for (const std::pair<int, U>& vecino : aristas[u]) {
+        for ( std::pair<int, U>& vecino : aristas[u]) {
             int v = vecino.first;
             U pesoUV = vecino.second;
 
@@ -160,3 +129,84 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
 
     return distancia;
 }
+
+
+
+template <class T, class U>
+T Grafo<T, U>::extraerCoordenada( std::string& coordenada) {
+    size_t pos = coordenada.find('|');
+    if (pos != std::string::npos) {
+        return static_cast<T>(std::stoi(coordenada.substr(pos + 1)));
+    }
+    return static_cast<T>(std::stoi(coordenada));
+}
+
+
+template <class T, class U>
+void Grafo<T, U>::agregarArista(int u, int v, int peso) {
+    aristas[u].emplace_back(v, peso);
+    aristas[v].emplace_back(u, peso); // Considerando grafos no dirigidos
+}
+
+template <class T, class U>
+void Grafo<T, U>::agregarAristaPesada(T ori, T des, U cos) {
+    int i_ori = buscarVertice(ori);
+    int i_des = buscarVertice(des);
+    if (i_ori != -1 && i_des != -1) {
+        aristas[i_ori].emplace_back(i_des, cos);
+    }
+}
+
+template <class T, class U>
+std::vector<T> Grafo<T, U>::organizarAgujeros() {
+    std::vector<T> ordenAgujeros;
+
+    for (int i = 0; i < cantVertices(); ++i) {
+        std::vector<T> ordenCircuito;
+        ordenCircuito.push_back(vertices[i]);
+
+        std::vector<U> distancias = dijkstra(vertices[i]);
+
+        // Ordenar los agujeros del circuito según las distancias mínimas
+        std::vector<std::pair<U, T>> distanciasAgujeros;
+        for (int j = 0; j < cantVertices(); ++j) {
+            if (j != i) {
+                distanciasAgujeros.emplace_back(distancias[j], vertices[j]);
+            }
+        }
+
+        // Ordenar según las distancias mínimas utilizando Dijkstra
+        std::sort(distanciasAgujeros.begin(), distanciasAgujeros.end(),
+                  [](const std::pair<U, T>& a, const std::pair<U, T>& b) {
+                      return a.first < b.first;
+                  });
+
+        for (const std::pair<U, T>& par : distanciasAgujeros) {
+            ordenCircuito.push_back(par.second);
+        }
+
+        ordenAgujeros.push_back(ordenCircuito);
+    }
+
+    return ordenAgujeros;
+}
+
+template <class T, class U>
+
+void Grafo<T, U>::cargarGrafoDesdeArchivo(std::ifstream& archivo) {
+    int n, m;
+    archivo >> n;
+
+    for (int i = 0; i < n; ++i) {
+        archivo >> m;
+
+        for (int j = 0; j < m; ++j) {
+            T x, y;
+            archivo >> x >> y;
+            insertarVertice(x);
+            insertarVertice(y);
+            insertarArista(x, y);  // No se incluye el tercer valor (peso)
+        }
+    }
+}
+
