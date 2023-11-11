@@ -30,7 +30,6 @@ int main(int argc, char* argv[]) {
         std::cerr << "No se pudo abrir el archivo de salida.\n";
         return 1;
     }
-
     // Guardar la secuencia óptima en el archivo de salida
     for (const std::vector<int>& circuito : ordenAgujeros) {
         for (const int& agujero : circuito) {
@@ -55,7 +54,6 @@ int main(int argc, char* argv[]) {
         }
 
         std::vector<int> distanciaTotal = miGrafo.dijkstra(circuito[0]);
-
         std::cout << "\nDistancia total recorrida por el taladro: " << distanciaTotal[circuito.back()] << " mm\n";
     }
 
