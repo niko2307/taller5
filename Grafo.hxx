@@ -1,4 +1,4 @@
-#include "Grafo.h"
+
 #include <fstream>
 #include <vector>
 #include <list>
@@ -7,19 +7,18 @@
 #include <queue>
 #include <climits>
 #include <algorithm>
-
+#include "Grafo.h"
 template <class T, class U>
 Grafo<T , U>::Grafo() {
 
 }
-
 template <class T, class U>
-void Grafo<T , U>::setVertices( std::vector<T> v) {
+void Grafo<T , U>::setVertices(std::vector<T> v) {
     vertices = v;
 }
 
 template <class T, class U>
-void Grafo<T , U>::setAristas(  std::vector<std::list<std::pair<int, U>>> a) {
+void Grafo<T , U>::setAristas(std::vector<std::list<std::pair<int, U>>> a) {
     aristas = a;
 }
 
@@ -105,13 +104,10 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
     int numVertices = vertices.size();
     std::vector<U> distancia(numVertices, INT_MAX);
     int indiceInicio = buscarVertice(inicio);
-
     if (indiceInicio == -1) {
         std::cerr << "El vértice de inicio no existe en el grafo.\n";
         return distancia;
     }
-
-    
     distancia[indiceInicio] = 0;
     std::priority_queue<std::pair<U , int>, std::vector<std::pair<U , int>>, std::greater<std::pair<U, int>>> pq;
     pq.push({0, indiceInicio});
@@ -124,19 +120,14 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
         for ( std::pair<int, U>& vecino : aristas[u]) {
             int v = vecino.first;
             U pesoUV = vecino.second;
-
             if (distanciaU + pesoUV < distancia[v]) {
                 distancia[v] = distanciaU + pesoUV;
                 pq.push({distancia[v], v});
             }
         }
     }
-
     return distancia;
 }
-
-
-
 template <class T, class U>
 T Grafo<T , U>::extraerCoordenada( std::string& coordenada) {
     size_t pos = coordenada.find('|');
@@ -145,12 +136,10 @@ T Grafo<T , U>::extraerCoordenada( std::string& coordenada) {
     }
     return static_cast<T>(std::stoi(coordenada));
 }
-
-
 template <class T, class U>
 void Grafo<T , U>::agregarArista(int u, int v, int peso) {
     aristas[u].emplace_back(v, peso);
-    aristas[v].emplace_back(u, peso); // Considerando grafos no dirigidos
+    aristas[v].emplace_back(u, peso); 
 }
 
 template <class T, class U>
@@ -161,7 +150,6 @@ void Grafo<T, U>::agregarAristaPesada(T ori, T des, U cos) {
         aristas[i_ori].emplace_back(i_des, cos);
     }
 }
-
 template <class T, class U>
 std::vector<std::vector<int>> Grafo<T, U>::organizarAgujeros() {
     std::vector<std::vector<int>> ordenAgujeros;
@@ -192,10 +180,8 @@ std::vector<std::vector<int>> Grafo<T, U>::organizarAgujeros() {
 
         ordenAgujeros.push_back(ordenCircuito);
     }
-
     return ordenAgujeros;
 }
-
 template <class T, class U>
 void Grafo<T , U>::cargarGrafoDesdeArchivo(std::ifstream& archivo) {
     int n, m;
@@ -209,7 +195,7 @@ void Grafo<T , U>::cargarGrafoDesdeArchivo(std::ifstream& archivo) {
             archivo >> x >> y;
             insertarVertice(x);
             insertarVertice(y);
-            insertarArista(x, y);  // No se incluye el tercer valor (peso)
+            insertarArista(x, y);  
         }
     }
 }
