@@ -1,6 +1,7 @@
 
 #ifndef GRAFO_H
 #define GRAFO_H
+#include <string>
 #include "Vertice.h"
 #include <vector>
 #include <list>
@@ -10,7 +11,6 @@ class Grafo {
 private:
     std::vector<T> vertices;
     std::vector<std::list<std::pair<int, U>>> aristas;
-
 public:
     Grafo();
     void setVertices(std::vector<T> v);
@@ -29,7 +29,7 @@ public:
     void agregarArista(int u, int v);
     void agregarAristaPesada(T ori, T des, U cos);
     std::vector<std::vector<int>> organizarAgujeros();
-    void cargarGrafoDesdeArchivo(std::ifstream& archivo);
+  
 };
 #include "Grafo.hxx"
 #endif // GRAFO_H

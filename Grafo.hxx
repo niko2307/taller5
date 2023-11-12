@@ -1,5 +1,4 @@
 
-#include <fstream>
 #include <vector>
 #include <list>
 #include <string>
@@ -8,6 +7,7 @@
 #include <climits>
 #include <algorithm>
 #include "Grafo.h"
+
 template <class T, class U>
 Grafo<T , U>::Grafo() {
 
@@ -85,7 +85,7 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
     std::vector<U> distancia(numVertices, INT_MAX);
     int indiceInicio = buscarVertice(inicio);
     if (indiceInicio == -1) {
-        std::cout << "El vértice de inicio no existe en el grafo.\n";
+      
         return distancia;
     }
     distancia[indiceInicio] = 0;
@@ -162,21 +162,5 @@ std::vector<std::vector<int>> Grafo<T, U>::organizarAgujeros() {
     }
     return ordenAgujeros;
 }
-template <class T, class U>
-void Grafo<T , U>::cargarGrafoDesdeArchivo(std::ifstream& archivo) {
-    int n, m;
-    archivo >> n;
 
-    for (int i = 0; i < n; ++i) {
-        archivo >> m;
-
-        for (int j = 0; j < m; ++j) {
-            T x, y;
-            archivo >> x >> y;
-            insertarVertice(x);
-            insertarVertice(y);
-            agregarArista(x, y);  
-        }
-    }
-}
 
