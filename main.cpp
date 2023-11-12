@@ -43,6 +43,15 @@ int main(int argc, char *argv[])
     std::vector<Grafo<Punto, float>> grafos;
     Punto puntoTemporal;
 
+    // Abrir el archivo de salida una vez antes del bucle de circuitos
+    std::ofstream archivoSalida(argv[2]);
+
+    if (!archivoSalida)
+    {
+        std::cerr << "Error al abrir el archivo de salida: " << argv[2] << std::endl;
+        return 1;
+    }
+
     for (int i = 0; i < numCircuitos; ++i)
     {
         Grafo<Punto, float> grafo;
@@ -77,6 +86,7 @@ int main(int argc, char *argv[])
 
         grafos.push_back(grafo);
 
+        // Obtener las distancias después de aplicar Dijkstra
         std::vector<float> distancias = grafo.dijkstra(grafo.getVertices()[0]);
 
         // Ordenar los vértices según las distancias
@@ -86,51 +96,29 @@ int main(int argc, char *argv[])
             distanciasConIndice.push_back({distancias[j], j});
         }
 
-        std::sort(distanciasConIndice.begin(), distanciasConIndice.end());
+        std::sort(distanciasConIndice.begin(), distanciasConIndice.end(), [](const std::pair<float, size_t> &a, const std::pair<float, size_t> &b) {
+            return a.first < b.first;
+        });
 
         // Imprimir en pantalla
         std::cout << "\nCircuito " << i + 1 << ":\n";
         std::cout << "Cantidad de agujeros: " << numAgujeros << std::endl;
 
+        float distanciaTotal = 0.0;
+
         for (size_t j = 0; j < distanciasConIndice.size(); ++j)
         {
             size_t indiceOrdenado = distanciasConIndice[j].second;
             std::cout << "Distancia al agujero " << indiceOrdenado + 1 << ": " << std::fixed << std::setprecision(1) << distancias[distanciasConIndice[j].second] << " unidades" << std::endl;
+            // Sumar las distancias al calcular la distancia total
+            distanciaTotal += distancias[distanciasConIndice[j].second];
         }
 
-        std::cout << "Distancia total recorrida: " << std::fixed << std::setprecision(1) << distancias[distancias.size() - 1] << " unidades\n";
-    }
+        std::cout << "Distancia total recorrida: " << std::fixed << std::setprecision(1) << distanciaTotal << " unidades\n";
 
-    archivoEntrada.close();
-
-    std::ofstream archivoSalida(argv[2]);
-
-    if (!archivoSalida)
-    {
-        std::cerr << "Error al abrir el archivo de salida: " << argv[2] << std::endl;
-        return 1;
-    }
-
-    // Ordenar los grafos por la coordenada X del primer agujero en cada circuito
-    std::sort(grafos.begin(), grafos.end(), []( Grafo<Punto, float> &a,  Grafo<Punto, float> &b) {
-        return a.getVertices()[0].X < b.getVertices()[0].X;
-    });
-
-    for (size_t i = 0; i < grafos.size(); ++i)
-    {
+        // Escribir en el archivo de salida
         archivoSalida << "\nCircuito " << i + 1 << ":\n";
-        archivoSalida << "Cantidad de agujeros: " << grafos[i].getVertices().size() << std::endl;
-
-        std::vector<float> distancias = grafos[i].dijkstra(grafos[i].getVertices()[0]);
-
-        // Ordenar los vértices según las distancias
-        std::vector<std::pair<float, size_t>> distanciasConIndice;
-        for (size_t j = 0; j < distancias.size(); ++j)
-        {
-            distanciasConIndice.push_back({distancias[j], j});
-        }
-
-        std::sort(distanciasConIndice.begin(), distanciasConIndice.end());
+        archivoSalida << "Cantidad de agujeros: " << numAgujeros << std::endl;
 
         for (size_t j = 0; j < distanciasConIndice.size(); ++j)
         {
@@ -138,10 +126,12 @@ int main(int argc, char *argv[])
             archivoSalida << std::fixed << std::setprecision(1) << grafos[i].getVertices()[indiceOrdenado].X << "|" << grafos[i].getVertices()[indiceOrdenado].Y << std::endl;
         }
 
-        archivoSalida << "Distancia total recorrida: " << std::fixed << std::setprecision(1) << distancias[distancias.size() - 1] << " unidades\n";
+        archivoSalida << "Distancia total recorrida: " << std::fixed << std::setprecision(1) << distanciaTotal << " unidades\n";
     }
 
     archivoSalida.close();
+
+    archivoEntrada.close();
 
     std::cout << "Datos guardados en " << argv[2] << std::endl;
 
