@@ -3,7 +3,8 @@
 #define VERTICE_H
 
 template <class T>
-class vertice {
+class vertice
+{
 private:
     T valor;
 
@@ -13,6 +14,7 @@ public:
     T getValor();
     void setValor(T val);
 };
+
 
 
 #endif // VERTICE_H
