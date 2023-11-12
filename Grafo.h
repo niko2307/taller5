@@ -31,5 +31,4 @@ public:
     std::vector<std::vector<int>> organizarAgujeros();
   
 };
-#include "Grafo.hxx"
 #endif // GRAFO_H

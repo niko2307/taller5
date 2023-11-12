@@ -2,7 +2,8 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
-#include "Grafo.h"
+#include "Grafo.hxx"
+
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {

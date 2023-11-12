@@ -2,7 +2,10 @@
 #include <queue>
 #include <climits>
 #include <algorithm>
-
+#include <string>
+#include <vector>
+#include <list>
+#include <utility>
 template <class T , class U>
 Grafo<T, U>::Grafo() {
 
