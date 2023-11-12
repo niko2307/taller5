@@ -1,5 +1,7 @@
+// Vertice.hxx
 
 #include "Vertice.h"
+
 
 template <class T>
 vertice<T>::vertice() {
