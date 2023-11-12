@@ -1,38 +1,33 @@
-
-#include <vector>
-#include <list>
-#include <string>
-#include <utility>
+#include "Grafo.h"
 #include <queue>
 #include <climits>
 #include <algorithm>
-#include "Grafo.h"
 
-template <class T, class U>
-Grafo<T , U>::Grafo() {
+template <class T , class U>
+Grafo<T, U>::Grafo() {
 
 }
-template <class T, class U>
-void Grafo<T , U>::setVertices(std::vector<T> v) {
+template <class T , class U>
+void Grafo<T, U>::setVertices(std::vector<T> v) {
     vertices = v;
 }
 
-template <class T, class U>
-void Grafo<T , U>::setAristas(std::vector<std::list<std::pair<int, U>>> a) {
+template <class T , class U>
+void Grafo<T, U>::setAristas(std::vector<std::list<std::pair<int, U>>> a) {
     aristas = a;
 }
 
-template <class T, class U>
-std::vector<T> Grafo<T , U>::getVertices() {
+template <class T , class U>
+std::vector<T> Grafo<T, U>::getVertices() {
     return vertices;
 }
 
-template <class T, class U>
+template <class T , class U>
 std::vector<std::list<std::pair<int, U>>> Grafo<T, U>::getAristas() {
     return aristas;
 }
 
-template <class T, class U>
+template <class T , class U>
 int Grafo<T, U>::buscarVertice(T vert) {
     int ind = -1;
     for (int i = 0; i < cantVertices(); i++) {
@@ -41,8 +36,8 @@ int Grafo<T, U>::buscarVertice(T vert) {
     return ind;
 }
 
-template <class T, class U>
-U Grafo<T , U>::buscarArista(T ori, T des) {
+template <class T , class U>
+U Grafo<T, U>::buscarArista(T ori, T des) {
     U res = -1;
     int i_ori = buscarVertice(ori);
     int i_des = buscarVertice(des);
@@ -55,31 +50,19 @@ U Grafo<T , U>::buscarArista(T ori, T des) {
     return res;
 }
 
-template <class T, class U>
-bool Grafo<T, U>::eliminarVertice(T vert) {
-    bool res = false;
-    int i_vert = buscarVertice(vert);
-    if (i_vert != -1) {
-       typename std::vector<std::list<std::pair<int, U>>>::iterator posE = aristas.begin() + i_vert;
-        aristas.erase(posE);
-        vertices.erase(vertices.begin() + i_vert);
-        res = true;
-    }
-    return res;
-}
 
 
-template <class T, class U>
+template <class T , class U>
 int Grafo<T, U>::cantVertices() {
     return vertices.size();
 }
 
-template <class T, class U>
+template <class T , class U>
 void Grafo<T, U>::insertarVertice(T vert) {
     vertices.push_back(vert);
 }
 
-template <class T, class U>
+template <class T , class U>
 std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
     int numVertices = vertices.size();
     std::vector<U> distancia(numVertices, INT_MAX);
@@ -108,21 +91,23 @@ std::vector<U> Grafo<T, U>::dijkstra(T inicio) {
     }
     return distancia;
 }
-template <class T, class U>
-T Grafo<T , U>::extraerCoordenada( std::string& coordenada) {
+
+template <class T , class U>
+T Grafo<T, U>::extraerCoordenada( std::string& coordenada) {
     size_t pos = coordenada.find('|');
     if (pos != std::string::npos) {
         return static_cast<T>(std::stoi(coordenada.substr(pos + 1)));
     }
     return static_cast<T>(std::stoi(coordenada));
 }
-template <class T, class U>
-void Grafo<T , U>::agregarArista(int u, int v) {
+
+template <class T , class U>
+void Grafo<T, U>::agregarArista(int u, int v) {
     aristas[u].emplace_back(v);
     aristas[v].emplace_back(u); 
 }
 
-template <class T, class U>
+template <class T , class U>
 void Grafo<T, U>::agregarAristaPesada(T ori, T des, U cos) {
     int i_ori = buscarVertice(ori);
     int i_des = buscarVertice(des);
@@ -130,7 +115,7 @@ void Grafo<T, U>::agregarAristaPesada(T ori, T des, U cos) {
         aristas[i_ori].emplace_back(i_des, cos);
     }
 }
-template <class T, class U>
+template <class T , class U>
 std::vector<std::vector<int>> Grafo<T, U>::organizarAgujeros() {
     std::vector<std::vector<int>> ordenAgujeros;
 

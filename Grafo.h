@@ -1,8 +1,8 @@
 
 #ifndef GRAFO_H
 #define GRAFO_H
-#include <string>
 #include "Vertice.h"
+#include <string>
 #include <vector>
 #include <list>
 #include <utility>
@@ -24,7 +24,7 @@ public:
     U buscarArista(T ori, T des);
     bool eliminarVertice(T vert);
     bool eliminarArista(T ori, T des);
-    std::vector<U>dijkstra(T inicio);
+    std::vector<U> dijkstra(T inicio);
     T extraerCoordenada(std::string& coordenada);
     void agregarArista(int u, int v);
     void agregarAristaPesada(T ori, T des, U cos);

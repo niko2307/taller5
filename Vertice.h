@@ -14,5 +14,5 @@ public:
     void setValor(T val);
 };
 
-#include "Vertice.hxx"
+
 #endif // VERTICE_H

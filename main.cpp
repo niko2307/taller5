@@ -19,7 +19,6 @@ int main(int argc, char *argv[]) {
 
     int numCircuitos;
     archivoEntrada >> numCircuitos;
-
     std::vector<Grafo<int, int>> grafos;
 
     for (int i = 0; i < numCircuitos; ++i) {
@@ -33,7 +32,7 @@ int main(int argc, char *argv[]) {
             archivoEntrada >> x >> y;
             grafo.insertarVertice(x);
             grafo.insertarVertice(y);
-            grafo.agregarAristaPesada(x, y, 0);
+            grafo.agregarAristaPesada(x, y,0);
         }
 
         grafos.push_back(grafo);
